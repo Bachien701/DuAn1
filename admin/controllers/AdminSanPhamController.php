@@ -21,6 +21,9 @@ class AdminSanPhamController {
         $listDanhMuc = $this->modelDanhMuc->getAllDanhMuc(); 
         
         require_once './views/sanpham/addSanPham.php';
+
+        // Xoá session khi load trang
+        deleteSessionError();
     }
       public function postAddSanPham(){
         // Hàm này dùng để sử lý thêm dữ liệu
@@ -78,6 +81,12 @@ class AdminSanPhamController {
                $errors['trang_thai'] = 'Trạng thái sản phẩm phải được chọn';
            }
 
+           if ($hinh_anh['error'] !== 0) {
+               $errors['hinh_anh'] = 'Phải chọn hình ảnh sản phẩm';
+           }
+
+           $_SESSION['error'] = $errors; // Lưu lỗi vào session để hiển thị trong view
+
          
 
            
@@ -86,29 +95,60 @@ class AdminSanPhamController {
                 // nếu k có lỗi thì tiến hành thêm sản phẩm
                 // var_dump('ok');
 
-                $this->modelSanPham->insertSanPham($ten_san_pham, $gia_san_pham, $gia_khuyen_mai , $so_luong, $ngay_nhap, $danh_muc_id , $trang_thai , $mo_ta , $file_thumb);
+               $san_pham_id = $this->modelSanPham->insertSanPham($ten_san_pham,
+                                                                 $gia_san_pham, 
+                                                                 $gia_khuyen_mai ,
+                                                                 $so_luong, $ngay_nhap,
+                                                                 $danh_muc_id , 
+                                                                 $trang_thai , 
+                                                                 $mo_ta , 
+                                                                 $file_thumb);
+                // xử lý thêm album ảnh sản phẩm img_array
+                if (!empty($img_array['name'])) {
+                    foreach ($img_array['name'] as $key=>$value) {
+                        $file = [
+                            'name' => $img_array['name'][$key],
+                            'type' => $img_array['type'][$key],
+                            'tmp_name' => $img_array['tmp_name'][$key],
+                            'error' => $img_array['error'][$key],
+                            'size' => $img_array['size'][$key]
+                        ];
+
+                        $link_hinh_anh = uploadFile($file, './uploads/'); // Lưu hình ảnh vào thư mục
+                        $this->modelSanPham->insertAlbumAnhSanPham($san_pham_id, $link_hinh_anh); // Thêm album ảnh vào cơ sở dữ liệu
+                        }
+                    }
+                
+
+
+
                 header('Location: ' . BASE_URL_ADMIN . '?act=san-pham'); // Chuyển hướng về danh sách sản phẩm
                 exit();
            }else {
                 // Trả về form và lỗi
-                $listDanhMuc = $this->modelDanhMuc->getAllDanhMuc(); // Thêm dòng này
-                 require_once './views/sanpham/addSanPham.php'; 
+               // Đặt chỉ thị xoá session sau khi hiện thi form
+               $_SESSION['flash'] = true;
+
+                header('Location: ' . BASE_URL_ADMIN . '?act=form-them-san-pham'); 
+                exit();
            }
         }
     }
 
-    //  public function formEditDanhMuc(){
-    //     // Hàm này dùng để hiển thị form nhập
-    //     // lấy ra thông tin danh mục cần sửa
-    //     $id = $_GET['id_danh_muc']; // Lấy id danh mục từ URL
-    //     $danhMuc = $this->modelDanhMuc->getDetailDanhMuc($id);
-    //     if ($danhMuc) {
-    //         require_once './views/danhmuc/editDanhMuc.php';
-    //     }else {
-    //           header('Location: ' . BASE_URL_ADMIN . '?act=danh-muc'); 
-    //           exit();
-    //     }
-    // }
+     public function formEditSanPham(){
+        // Hàm này dùng để hiển thị form nhập
+        // lấy ra thông tin danh mục cần sửa
+        $id = $_GET['id_san_pham']; // Lấy id danh mục từ URL
+        $sanPham = $this->modelSanPham->getDetailSanPham($id);
+        $listSanPham = $this->modelSanPham->getAllSanPham($id); // Lấy danh sách sản phẩm từ mô hình
+        $listDanhMuc = $this->modelDanhMuc->getAllDanhMuc(); // Lấy danh sách danh mục từ mô hình
+        if ($sanPham) {
+            require_once './views/sanpham/editSanPham.php';
+        }else {
+              header('Location: ' . BASE_URL_ADMIN . '?act=san-pham'); 
+              exit();
+        }
+    }
         
     //   public function postEditDanhMuc(){
     //     // Hàm này dùng để sử lý thêm dữ liệu
