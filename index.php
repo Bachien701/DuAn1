@@ -33,3 +33,4 @@ match ($act) {
     'danh-sach-san-pham' => (new HomeController())->danhSachSanPham(),
      //BASE_URL /admin/?act=danh-sach-san-pham 
 };
+

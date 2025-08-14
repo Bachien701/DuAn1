@@ -45,7 +45,7 @@
 
                    <div class="form-group">
                     <label>Mô tả</label>
-                    <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập mô tả"><?= isset($_POST['mo_Ta']) ? htmlspecialchars($_POST['mo_Ta']) : '' ?></textarea>
+                    <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập mô tả"><?= isset($_POST['mo_ta']) ? htmlspecialchars($_POST['mo_ta']) : '' ?></textarea>
                     
                   </div>
 

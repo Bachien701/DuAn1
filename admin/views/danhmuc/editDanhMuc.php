@@ -1,4 +1,3 @@
-
 <!-- <header> -->
 <?php include './views/layout/header.php' ?>
 <!-- End header -->
@@ -49,7 +48,7 @@
 
                    <div class="form-group">
                     <label>Mô tả</label>
-                    <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập mô tả"><?= $danhMuc['ten_danh_muc'] ?></textarea>
+                    <textarea name="mo_ta" id="" class="form-control" placeholder="Nhập mô tả"><?= $danhMuc['mo_ta'] ?></textarea>
                   </div>
 
               </div>

@@ -66,7 +66,7 @@
                     <td><?= $sanPham['trang_thai'] == 1 ? 'Còn bán':'Dừng bán';  ?></td>
                   
                     <td>
-                      <a href="<?= BASE_URL_ADMIN . '?act=form-sua-san-phamc&id_san_pham=' . $sanPham['id'] ?>">
+                      <a href="<?= BASE_URL_ADMIN . '?act=form-sua-san-pham&id_san_pham=' . $sanPham['id'] ?>">
                           <button class="btn btn-warning">Sửa</button>
                       </a>
                        <a href="<?= BASE_URL_ADMIN . '?act=xoa-san_pham&id_san_pham=' . $sanPham['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')">

@@ -70,7 +70,7 @@ class AdminDanhMucController {
            // Lấy dữ liệu từ form
            $id = $_POST['id'];
            $ten_danh_muc = $_POST['ten_danh_muc'];
-           $moTa = $_POST['mo_Ta'];
+           $moTa = $_POST['mo_ta'];
 
            // Tạo 1 mảng trống để chứa dữ liệu
            $errors = [];
