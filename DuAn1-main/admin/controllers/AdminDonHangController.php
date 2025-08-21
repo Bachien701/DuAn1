@@ -1,7 +1,7 @@
 <?php 
 class AdminDonHangController {
 
-        public $modelDonHnag;
+        public $modelDonHang;
     
 
         public function __construct() 
@@ -22,71 +22,108 @@ class AdminDonHangController {
                 
                 // lấy danh sách sản phẩm đã đặt của đơn hàng ở bảng chi_tiet_don_hangs
                 $sanPhamDonHang =$this->modelDonHang->getListSpDonHang($don_hang_id);
-                var_dump($sanPhamDonHang);die;
+               
+                $listTrangThaiDonHang = $this->modelDonHang->getALLTrangThaiDonHang();
                 require_once './views/donhang/detailDonHang.php';
         }
     
 
 
-    //  public function formEditSanPham(){
-        // Hàm này dùng để hiển thị form nhập
-        // lấy ra thông tin danh mục cần sửa
-    //     $id = $_GET['id_san_pham']; // Lấy id danh mục từ URL
-    //     $sanPham = $this->modelSanPham->getDetailSanPham($id);
-    //     $listSanPham = $this->modelSanPham->getAllSanPham($id); // Lấy danh sách sản phẩm từ mô hình
-    //     $listDanhMuc = $this->modelDanhMuc->getAllDanhMuc(); // Lấy danh sách danh mục từ mô hình
-    //     if ($sanPham) {
-    //         require_once './views/sanpham/editSanPham.php';
-    //     }else {
-    //           header('Location: ' . BASE_URL_ADMIN . '?act=san-pham'); 
-    //           exit();
-    //     }
-    // }
+     public function formEditDonHang()
+     {
+        $id = $_GET['id_don_hang']; 
+        $donHang = $this->modelDonHang->getDetailDonHang($id);
+        $listTrangThaiDonHang = $this->modelDonHang->getALLTrangThaiDonHang();
+        if ($donHang) {
+            require_once './views/donhang/editDonHang.php';
+        }else {
+              header('Location: ' . BASE_URL_ADMIN . '?act=don-hang'); 
+              exit();
+        }
+    }
         
-    //   public function postEditDanhMuc(){
-    //     // Hàm này dùng để sử lý thêm dữ liệu
+      public function postEditDonHang(){
+        // Hàm này dùng để sử lý thêm dữ liệu
 
-    //    // kiểm tra xem dữ liệu có phải được submit lên k
-    //    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //        // Lấy dữ liệu từ form
-    //        $id = $_POST['id'];
-    //        $ten_danh_muc = $_POST['ten_danh_muc'];
-    //        $moTa = $_POST['mo_Ta'];
+       // kiểm tra xem dữ liệu có phải được submit lên k
+       if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+           // lấy ra dữ liệu
 
-    //        // Tạo 1 mảng trống để chứa dữ liệu
-    //        $errors = [];
-    //        if (empty($ten_danh_muc)) {
-    //            $errors['ten_danh_muc'] = 'Tên danh mục không được để trống';
-    //        }
+           $don_hang_id = $_POST['don_hang_id'] ?? '';
+           //truy vấn        
+           $ten_nguoi_nhan =$_POST['ten_nguoi_nhan'] ?? '' ;
+           $sdt_nguoi_nhan =$_POST['sdt_nguoi_nhan'] ?? '' ;
+           $email_nguoi_nhan =$_POST['email_nguoi_nhan'] ?? '' ;
+           $dia_Chi_nguoi_nhan =$_POST['dia_chi_nguoi_nhan'] ?? '' ;
+           $ghi_chu =$_POST['ghi_chu'] ?? '' ;
+           $trang_thai_id =$_POST['trang_thai_id'] ?? '' ;
+           $ten_san_pham =$_POST['ten_san_pham'] ?? '' ;
+
+
+
+        
+           // Tạo 1 mảng trống để chứa dữ liệu
+           $errors = [];
+           if (empty($ten_nguoi_nhan)) {
+               $errors['ten_nguoi_nhan'] = 'Tên người nhận không được để trống';
+           }
+           $errors = [];
+           if (empty($sdt_nguoi_nhan)) {
+               $errors['sdt_nguoi_nhan'] = 'SDT người nhận  không được để trống';
+           }
+           $errors = [];
+           if (empty($email_nguoi_nhan)) {
+               $errors['email_nguoi_nhan'] = 'email người nhận không được để trống';
+           }
+           $errors = [];
+           if (empty($dia_chi_nguoi_nhan)) {
+               $errors['dia_chi_nguoi_nhan'] = 'Địa chỉ người nhận không được để trống';
+           }
+           $errors = [];
+           if (empty($trang_thai_id)) {
+               $errors['trang_thai_id'] = 'Trạng thái đơn hàng';
+           }
+          
+
+           $_SESSION['error'] = $errors;
+           //var_dump($error);die;
            
-    //        // Nếu không có lỗi thì tiến hành sửa danh mục
-    //        if (empty($errors)) {
-    //             // nếu k có lỗi thì tiến hành sửa danh mục
-    //             // var_dump('ok');
+           // Nếu không có lỗi thì tiến hành sửa danh mục
+           if (empty($errors)) {
+                // nếu k có lỗi thì tiến hành sửa danh mục
+                // var_dump('ok');
 
-    //             $this->modelDanhMuc->updateDanhMuc($id ,$ten_danh_muc, $moTa);
-    //             header('Location: ' . BASE_URL_ADMIN . '?act=danh-muc'); // Chuyển hướng về danh sách danh mục
-    //             exit();
-    //        }else {
-    //             // Trả về form và lỗi
-    //             $danhMuc = [
-    //                 'id' => $id,
-    //                 'ten_danh_muc' => $ten_danh_muc,
-    //                 'mo_ta' => $moTa
-    //             ];
-    //              require_once './views/danhmuc/editDanhMuc.php'; 
-    //        }
-    //     }
-    // }
+                $this->modelDonHang->updateDonHang($don_hang_id,
+                    $ten_nguoi_nhan,
+                    $sdt_nguoi_nhan,
+                    $email_nguoi_nhan,
+                    $dia_chi_nguoi_nhan,
+                    $ghi_chu,
+                    $trang_thai_id,
+                );
+       
+                header('Location: ' . BASE_URL_ADMIN . '?act=don_hang'); // Chuyển hướng về danh sách danh mục
+                exit();
+           }else {
+                // Trả về form và lỗi
+                // đặt chỉ thị xóa session sau khi hiển thị form
+                $SESSION['flash'] = true;
+                 header('Location: ' . BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang='); 
+            
+               
+                
+           }
+        }
+    }
 
-    // public function deleteDanhMuc() {
-    //     $id = $_GET['id_danh_muc']; 
-    //     $danhMuc = $this->modelDanhMuc->getDetailDanhMuc($id);
+    public function deleteDanhMuc() {
+        $id = $_GET['id_danh_muc']; 
+        $danhMuc = $this->modelDanhMuc->getDetailDanhMuc($id);
 
-    //     if ($danhMuc) {
-    //         $this->modelDanhMuc->destroyDanhMuc($id);
-    //     }
-    //      header('Location: ' . BASE_URL_ADMIN . '?act=danh-muc'); 
-    //           exit();
-    // }
+        if ($danhMuc) {
+            $this->modelDanhMuc->destroyDanhMuc($id);
+        }
+         header('Location: ' . BASE_URL_ADMIN . '?act=form-sua-don-hang&id_don_hang=' . $don_hang_id); 
+              exit();
+    }
 }

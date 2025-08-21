@@ -51,4 +51,9 @@ function deleteSessionError() {
         session_destroy();
     }
 }
+
+// format date
+function formatDate($date){
+   return $newDate = date ("d-m-Y",strtotime($date));
+}
 //debug
